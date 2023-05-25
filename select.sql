@@ -17,10 +17,11 @@ left join albums a on s.album = a.album_id
 group by a.album_name;
 
 --4.все исполнители, которые не выпустили альбомы в 2020 году;
-
-select s.singer_name from albums a 
+select s.singer_name from albums albums a
+where s.singer_name not in (select s.singer_name from albums a 
 left join singersalbums sa on sa.album_id = a.album_id
 left join singers s on s.singer_id = sa.singer_id 
+);
 where not DATE_PART('year', a.album_year_of_issue::date) = 2020
 group by s.singer_name;
 
@@ -35,8 +36,17 @@ left join singers s2 on s2.singer_id = sa.singer_id
 where s2.singer_name like 'T-Pain';
 
 -- 6. название альбомов, в которых присутствуют исполнители более 1 жанра;
+select distinct (a.album_name) from albums a
+join singersalbums ae on a.album_id=ae.album_id
+join singers e on ae.singer_id=e.singer_id
+join singersgenres ge on e.singer_id=ge.singer_id
+join genres g on ge.genre_id=g.genre_id
+group by a.album_name, e.singer_id
+having count(ge.genre_id)>1
 
-select sg.singer_id, count(sg.genre_id) from albums a 
+
+
+/*select sg.singer_id, count(sg.genre_id) from albums a 
 left join singersalbums sa on a.album_id = sa.album_id 
 left join singers s on s.singer_id = sa.singer_id
 left join singersgenres sg on sg.singer_id = s.singer_id 
@@ -48,7 +58,7 @@ left join singers s on s.singer_id = sa.singer_id
 left join singersgenres sg on sg.singer_id = s.singer_id 
 left join genres g on g.genre_id = sg.genre_id 
 group by a.album_name 
-having count(distinct g.gengre_name) > 1;
+having count(distinct g.gengre_name) > 1;*/
 
 --7. наименование треков, которые не входят в сборники;
 select s.track_name, c.collection_id  from tracks s 
