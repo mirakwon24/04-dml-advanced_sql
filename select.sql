@@ -17,13 +17,31 @@ left join albums a on s.album = a.album_id
 group by a.album_name;
 
 --4.все исполнители, которые не выпустили альбомы в 2020 году;
-select s.singer_name from albums albums a
+SELECT singer_name FROM singers
+WHERE singer_name NOT IN (SELECT singers FROM singers s2
+                      JOIN singers s ON s2.singer_id = s2.singer_id
+                      JOIN albums a ON a.album_id = a.album_id
+                         WHERE a.album_year_of_issue IN (2020));
+            
+                     
+                     /*Возможные варианты*/
+/*SELECT singer_name FROM singers
+WHERE s.singer_name NOT IN (SELECT s.singer_name
+FROM singers
+JOIN singersalbums ae ON e.album_id = ae.album_id
+JOIN album a ON ae.album_id = a.album_id
+WHERE album_year_of_issue = 2020);*/
+
+ /*select s.singer_name from albums albums a
 where s.singer_name not in (select s.singer_name from albums a 
 left join singersalbums sa on sa.album_id = a.album_id
 left join singers s on s.singer_id = sa.singer_id 
 );
 where not DATE_PART('year', a.album_year_of_issue::date) = 2020
 group by s.singer_name;
+*/
+
+
 
 --5.названия сборников, в которых присутствует конкретный исполнитель (выберите сами);
 
