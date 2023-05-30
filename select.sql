@@ -19,7 +19,7 @@ group by a.album_name;
 --4.все исполнители, которые не выпустили альбомы в 2020 году;
 SELECT singer_name FROM singers
 WHERE singer_name NOT IN (SELECT singers FROM singers s2
-                      JOIN singers s ON s2.singer_id = s2.singer_id
+                      JOIN singers s ON s2.singer_id = singers
                       JOIN albums a ON a.album_id = a.album_id
                          WHERE a.album_year_of_issue IN (2020));
             
